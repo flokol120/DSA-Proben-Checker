@@ -8,7 +8,7 @@ var win;
 
 function createWindow() {
     // Create the browser window.
-    win = new BrowserWindow({ width: 800, height: 600 })
+    win = new BrowserWindow({ width: 800, height: 500 })
 
     // and load the index.html of the app.
     win.loadURL(url.format({
@@ -22,7 +22,6 @@ exports.handleAddTalent = function handleAddTalent(name, number, firstAttr, seco
     var raw = {
         talents: []
     }
-    parseInt()
     var obj = {
         name: name,
         number: number,
@@ -43,9 +42,7 @@ exports.handleAddTalent = function handleAddTalent(name, number, firstAttr, seco
 }
 
 exports.handleForm = function handleForm(targetWindow, first, second, third, probe, hero, callback) {
-    console.log(probe);
-
-    fs.readFile(`/mnt/78961e33-530d-4c7c-b9b1-d5601ab627be/Projects/DSA_Probe_Checker/DSA Helden/${hero}.json`, 'utf8', function (err, data) {
+    fs.readFile(`./DSA Helden/${hero}`, 'utf8', function (err, data) {
         if (err) throw err;
         var obj = JSON.parse(data);
         fs.readFile('./talents.json', 'utf8', function (err, dataTal) {
@@ -67,19 +64,12 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
             var left = 0;
             var attributes = obj['attr']['values'];
             var firstAttrValue = attributes[firstAttr][1] + attributes[firstAttr][2]
-            console.log("1 attr: " + firstAttrValue);
             var secondAttrValue = attributes[secondAttr][1] + attributes[secondAttr][2]
-            console.log("2 attr: " + secondAttrValue);
             var thirdAttrValue = attributes[thirdAttr][1] + attributes[thirdAttr][2]
-            console.log("3 attr: " + thirdAttrValue);
 
             var firstCalc = firstAttrValue - first
-            console.log("1 calc: " + firstCalc);
             var secondCalc = secondAttrValue - second
-            console.log("2 calc: " + secondCalc);
             var thirdCalc = thirdAttrValue - third
-            console.log("3 calc: " + thirdCalc);
-            console.log(talent);
 
             var compensation;
             if(obj['talents'][talent] != undefined){
@@ -87,21 +77,14 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
             }else{
                 compensation = 0
             }
-            
-            
-            console.log(compensation);
-
 
             if (firstCalc < 0) {
-                console.log(`over value!(${firstCalc})`);
                 compensation += firstCalc
             }
             if (secondCalc < 0) {
-                console.log(`over value!(${secondCalc})`);
                 compensation += secondCalc
             }
             if (thirdCalc < 0) {
-                console.log(`over value!(${thirdCalc})`);
                 compensation += thirdCalc
             }
 
@@ -112,5 +95,4 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
 
 app.on('ready', function () {
     createWindow();
-
-})
+});
