@@ -4,12 +4,16 @@
   "description": "an easy but helpful tool to calculate your heroes rolling results",
   "main": "main.js",
   "dependencies": {
-    "electron": "^1.8.4",
     "jquery": "^3.3.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "electron": "^1.8.4"
+  },
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "repository": {
     "type": "git",
@@ -20,5 +24,18 @@
   "bugs": {
     "url": "https://github.com/flokol120/DSA-Proben-Checker/issues"
   },
-  "homepage": "https://github.com/flokol120/DSA-Proben-Checker#readme"
+  "homepage": "https://github.com/flokol120/DSA-Proben-Checker#readme",
+  "build": {
+    "appId": "me.flokol120.dsa_proben_checker",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "./img/icon.png"
+    },
+    "win": {
+      "target": "zip"
+    },
+    "linux": {
+      "target": "tar.gz"
+    }
+  }
 }
