@@ -1,0 +1,16 @@
+{
+  "name": "dsa_probe_checker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Florian Dörr",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^1.8.4",
+    "jquery": "3.3.1"
+  }
+}

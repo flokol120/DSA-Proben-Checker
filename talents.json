@@ -1,0 +1,53 @@
+{
+    "talents": [
+        {
+            "name": "Fliegen",
+            "number": "TAL_1",
+            "firstAttr": 0,
+            "secondAttr": 2,
+            "thirdAttr": 5
+        },
+        {
+            "name": "Gaukeleien",
+            "number": "TAL_2",
+            "firstAttr": 0,
+            "secondAttr": 3,
+            "thirdAttr": 4
+        },
+        {
+            "name": "Klettern",
+            "number": "TAL_3",
+            "firstAttr": 0,
+            "secondAttr": 5,
+            "thirdAttr": 7
+        },
+        {
+            "name": "Körperbeherrschung",
+            "number": "TAL_4",
+            "firstAttr": 5,
+            "secondAttr": 5,
+            "thirdAttr": 6
+        },
+        {
+            "name": "Kraftakt",
+            "number": "TAL_5",
+            "firstAttr": 6,
+            "secondAttr": 7,
+            "thirdAttr": 7
+        },
+        {
+            "name": "Reiten",
+            "number": "TAL_6",
+            "firstAttr": 3,
+            "secondAttr": 5,
+            "thirdAttr": 7
+        },
+        {
+            "name": "Schwimmen",
+            "number": "TAL_7",
+            "firstAttr": 5,
+            "secondAttr": 6,
+            "thirdAttr": 7
+        }
+    ]
+}

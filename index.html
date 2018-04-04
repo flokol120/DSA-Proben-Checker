@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World!</title>
+</head>
+
+<body>
+  <form action="#" id="checkProbe">
+    <input id="first" type="number" value=5 />
+    <input id="second" type="number" value=5 />
+    <input id="third" type="number" value=5 />
+    <br>
+    <br>
+
+    <select id="hero">
+      <option value="Bick Shackus De Won e' Oly" selected>Bick Shackus De Won e' Oly</option>
+      <option value="Elrond von Earendil">Elrond von Earendil</option>
+      <option value="Orion Abendrot">Orion Abendrot</option>
+      <option value="Pietorious del Fanhab">Pietorious del Fanhab</option>
+      <option value="Sir WaGeh-SiDaAn">Sir WaGeh-SiDaAn</option>
+      <option value="Zauberarrin van Odd">Zauberarrin van Odd</option>
+    </select>
+
+    <select id="probe">
+      <!--<option value="Sinnesschärfe" selected>Sinnesschärfe</option>
+              <option value="Körperbeherschung">Körperbeherschung</option>
+              <option value="Verbergen">Verbergen</option>-->
+    </select>
+
+    <input id="submit" type="submit" value="check Probe">
+  </form>
+
+  <p id="response"></p>
+  <script>
+    const lel = require('./misc')
+    populateProbes();
+    function populateProbes() {
+      console.log("I'm here!");
+      var select = document.getElementById("probe")
+      console.log("I'm here!(got select)");
+      lel.getTalents(function (obj) {
+        console.log(obj);
+        obj = obj['talents']
+        for (var i = 0; i < obj.length; i++) {
+          var opt = document.createElement("option")
+          opt.value = obj[i]['number']
+          opt.textContent = obj[i]['name']
+          select.appendChild(opt)
+        }
+      });
+    }
+  </script>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+
+  <form action="#" id="addTalent">
+    <input id="name" type="text" placeholder="name of talent" />
+    <input id="number" type="number" placeholder="number of talent" />
+    <br>
+    <br>
+
+    <select id="firstAttr">
+      <option value=0 selected>MU (Mut)</option>
+      <option value=1>KL (Klugheit)</option>
+      <option value=2>IN (Intuition)</option>
+      <option value=3>CH (Charisma)</option>
+      <option value=4>FF (Fingerfertigkeit)</option>
+      <option value=5>GE (Geschwindigkeit)</option>
+      <option value=6>KO (Konstitution)</option>
+      <option value=7>KK (Körperkraft)</option>
+    </select>
+
+    <select id="secondAttr">
+      <option value=0 selected>MU (Mut)</option>
+      <option value=1>KL (Klugheit)</option>
+      <option value=2>IN (Intuition)</option>
+      <option value=3>CH (Charisma)</option>
+      <option value=4>FF (Fingerfertigkeit)</option>
+      <option value=5>GE (Geschwindigkeit)</option>
+      <option value=6>KO (Konstitution)</option>
+      <option value=7>KK (Körperkraft)</option>
+    </select>
+
+    <select id="thirdAttr">
+      <option value=0 selected>MU (Mut)</option>
+      <option value=1>KL (Klugheit)</option>
+      <option value=2>IN (Intuition)</option>
+      <option value=3>CH (Charisma)</option>
+      <option value=4>FF (Fingerfertigkeit)</option>
+      <option value=5>GE (Geschwindigkeit)</option>
+      <option value=6>KO (Konstitution)</option>
+      <option value=7>KK (Körperkraft)</option>
+    </select>
+
+    <input id="submit" type="submit" value="add">
+  </form>
+
+  <script src='renderFile.js'></script>
+</body>
+
+</html>
