@@ -21,7 +21,7 @@ module.exports.populateProbes = function populateProbes(document) {
     });
 }
 
-function getHeros(callback) {
+function getHeroes(callback) {
     fs.readdir("./DSA Helden", function (err, filenames) {
         var data = []
         for (var i = 0; i < filenames.length; i++) {
@@ -34,9 +34,9 @@ function getHeros(callback) {
     });
 }
 
-module.exports.populateHeros = function populateHeros(document) {
+module.exports.populateHeroes = function populateHeroes(document) {
     var select = document.getElementById("hero")
-    getHeros(function (data) {
+    getHeroes(function (data) {
         for (var i = 0; i < data.length; i++) {
             var opt = document.createElement("option")
             opt.value = data[i][1]
