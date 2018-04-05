@@ -44,15 +44,15 @@ submitFormButton.addEventListener("submit", function (event) {
                 } else {
                     qs = 1
                 }
-                response.style.backgroundColor = "Green";
+                response.style.color = "Green";
                 response.innerHTML = `passed probe!(${compensation}, QS: ${qs})`
             } else {
-                response.style.backgroundColor = "Red";
+                response.style.color = "Red";
                 response.innerHTML = `did not pass probe!(${compensation})`
             }
         });
     }else{
-        response.style.backgroundColor = "Red";
+        response.style.color = "Red";
         response.innerHTML = `Please enter all rolled numbers or click on a dice to generate a random number`
     }
 });

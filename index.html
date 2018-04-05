@@ -87,8 +87,11 @@
         <br>
         <br>
 
-        <input id="submit" type="submit" value="add" class="topcoat-button--large" />
+        <input id="submitAddTalent" type="submit" value="add" class="topcoat-button--large" />
       </form>
+      <br>
+      <br>
+      <input id="reload" type="button" value="reload heroes and talents" class="topcoat-button--large" />
     </div>
   </div>
 
@@ -99,6 +102,11 @@
     const misc = require('./misc')
     misc.populateProbes(document);
     misc.populateHeroes(document);
+
+    $('#reload').click(function () {
+      misc.populateProbes(document);
+      misc.populateHeroes(document);
+    })
   </script>
   </div>
 </body>

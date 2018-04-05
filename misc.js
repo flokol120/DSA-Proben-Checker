@@ -1,4 +1,7 @@
 const fs = require('fs');
+const $ = require('jquery')
+
+var response = document.getElementById("response")
 
 function getTalents(callback) {
     fs.readFile(`./talents.json`, 'utf8', function (err, data) {
@@ -37,11 +40,19 @@ function getHeroes(callback) {
 module.exports.populateHeroes = function populateHeroes(document) {
     var select = document.getElementById("hero")
     getHeroes(function (data) {
-        for (var i = 0; i < data.length; i++) {
-            var opt = document.createElement("option")
-            opt.value = data[i][1]
-            opt.textContent = data[i][0]
-            select.appendChild(opt)
+        if (data.length != 0) {
+            for (var i = 0; i < data.length; i++) {
+                var opt = document.createElement("option")
+                opt.value = data[i][1]
+                opt.textContent = data[i][0]
+                select.appendChild(opt)
+            }
+            document.getElementById("submit").disabled = false;
+            response.innerHTML = ""
+        }else{
+            response.style.color = "Red"
+            response.innerHTML = "no heroes were found! Be sure to place them into 'DSA Helden/'"
+            document.getElementById("submit").disabled = true;
         }
     });
 }

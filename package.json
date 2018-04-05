@@ -19,7 +19,10 @@
     "type": "git",
     "url": "git+https://github.com/flokol120/DSA-Proben-Checker.git"
   },
-  "author": "Florian Dörr",
+  "author": {
+    "name": "Florian Dörr",
+    "email": "flokol120@gmail.com"
+  },
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/flokol120/DSA-Proben-Checker/issues"
