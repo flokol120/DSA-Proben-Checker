@@ -26,8 +26,10 @@ submitFormButton.addEventListener("submit", function (event) {
     let third = document.getElementById("third").value;
     let type = document.getElementById("probe").value;
     let hero = document.getElementById("hero").value;
+    let relief = parseInt(document.getElementById("relief").value);
+    let restriction = parseInt(document.getElementById("restriction").value);
     if (first != "" && second != "" && third != "") {
-        handleForm(currentWindow, first, second, third, type, hero, function (compensation) {
+        handleForm(currentWindow, first, second, third, type, hero, relief, restriction, function (compensation) {
             var response = document.getElementById("response")
             if (compensation >= 0) {
                 var qs;

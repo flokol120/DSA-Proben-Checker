@@ -52,7 +52,7 @@ exports.handleAddTalent = function handleAddTalent(name, number, firstAttr, seco
     });
 }
 
-exports.handleForm = function handleForm(targetWindow, first, second, third, probe, hero, callback) {
+exports.handleForm = function handleForm(targetWindow, first, second, third, probe, hero, relief, restriction, callback) {
     fs.readFile(`./DSA Helden/${hero}`, 'utf8', function (err, data) {
         if (err) throw err;
         var obj = JSON.parse(data);
@@ -76,11 +76,27 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
             var attributes = obj['attr']['values'];
             var firstAttrValue = attributes[firstAttr][1] + attributes[firstAttr][2]
             var secondAttrValue = attributes[secondAttr][1] + attributes[secondAttr][2]
-            var thirdAttrValue = attributes[thirdAttr][1] + attributes[thirdAttr][2]
-
-            var firstCalc = firstAttrValue - first
-            var secondCalc = secondAttrValue - second
-            var thirdCalc = thirdAttrValue - third
+            var thirdAttrValue = attributes[thirdAttr][1] + attributes[thirdAttr][2]            
+            
+            if(relief != 0 && restriction != 0){
+                var firstCalc = ((firstAttrValue - first) + restriction) - relief
+                var secondCalc = ((secondAttrValue - second) + restriction) - relief
+                var thirdCalc = ((thirdAttrValue - third) + restriction) - relief
+            }else{
+                if(relief == 0 && restriction == 0){
+                    var firstCalc = firstAttrValue - first
+                    var secondCalc = secondAttrValue - second
+                    var thirdCalc = thirdAttrValue - third
+                }else if(relief != 0){
+                    var firstCalc = ((firstAttrValue - first) + relief)
+                    var secondCalc = ((secondAttrValue - second) + relief)
+                    var thirdCalc = ((thirdAttrValue - third) + relief)
+                }else{
+                    var firstCalc = ((firstAttrValue - first) - restriction)
+                    var secondCalc = ((secondAttrValue - second) - restriction)
+                    var thirdCalc = ((thirdAttrValue - third) - restriction)
+                }
+            }
 
             var compensation;
             if(obj['talents'][talent] != undefined){
