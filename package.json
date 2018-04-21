@@ -1,12 +1,13 @@
 {
   "name": "dsa_proben_checker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "an easy but helpful tool to calculate your heroes rolling results",
   "main": "main.js",
   "dependencies": {
     "jquery": "^3.3.1"
   },
   "devDependencies": {
+    "electron-builder": "^20.10.0",
     "electron": "^1.8.4"
   },
   "scripts": {
@@ -23,7 +24,7 @@
     "name": "Florian Dörr",
     "email": "flokol120@gmail.com"
   },
-  "license": "GPL-3.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/flokol120/DSA-Proben-Checker/issues"
   },
