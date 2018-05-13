@@ -76,7 +76,7 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
             var attributes = obj['attr']['values'];
             var firstAttrValue = attributes[firstAttr][1] + attributes[firstAttr][2]
             var secondAttrValue = attributes[secondAttr][1] + attributes[secondAttr][2]
-            var thirdAttrValue = attributes[thirdAttr][1] + attributes[thirdAttr][2]            
+            var thirdAttrValue = attributes[thirdAttr][1] + attributes[thirdAttr][2]
             
             if(relief != 0 && restriction != 0){
                 var firstCalc = ((firstAttrValue - first) + restriction) - relief

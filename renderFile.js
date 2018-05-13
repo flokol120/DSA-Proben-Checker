@@ -24,38 +24,47 @@ submitFormButton.addEventListener("submit", function (event) {
     let first = document.getElementById("first").value;
     let second = document.getElementById("second").value;
     let third = document.getElementById("third").value;
-    let type = document.getElementById("probe").value;
-    let hero = document.getElementById("hero").value;
-    let relief = parseInt(document.getElementById("relief").value);
-    let restriction = parseInt(document.getElementById("restriction").value);
-    if (first != "" && second != "" && third != "") {
-        handleForm(currentWindow, first, second, third, type, hero, relief, restriction, function (compensation) {
-            var response = document.getElementById("response")
-            if (compensation >= 0) {
-                var qs;
-                if (compensation > 15) {
-                    qs = 6
-                } else if (compensation > 12) {
-                    qs = 5
-                } else if (compensation > 9) {
-                    qs = 4
-                } else if (compensation > 6) {
-                    qs = 3
-                } else if (compensation > 3) {
-                    qs = 2
-                } else {
-                    qs = 1
-                }
-                response.style.color = "Green";
-                response.innerHTML = `passed probe!(${compensation}, QS: ${qs})`
-            } else {
-                response.style.color = "Red";
-                response.innerHTML = `did not pass probe!(${compensation})`
-            }
-        });
-    }else{
+    console.log(first);
+    console.log(second);
+    console.log(third);
+
+    if (first > 20 || first < 1 || second > 20 || second < 1 || third > 20 || third < 1) {
         response.style.color = "Red";
-        response.innerHTML = `Please enter all rolled numbers or click on a dice to generate a random number`
+        response.innerHTML = `Only values between 1 and 20 are allowed!`
+    } else {
+        let type = document.getElementById("probe").value;
+        let hero = document.getElementById("hero").value;
+        let relief = parseInt(document.getElementById("relief").value);
+        let restriction = parseInt(document.getElementById("restriction").value);
+        if (first != "" && second != "" && third != "") {
+            handleForm(currentWindow, first, second, third, type, hero, relief, restriction, function (compensation) {
+                var response = document.getElementById("response")
+                if (compensation >= 0) {
+                    var qs;
+                    if (compensation > 15) {
+                        qs = 6
+                    } else if (compensation > 12) {
+                        qs = 5
+                    } else if (compensation > 9) {
+                        qs = 4
+                    } else if (compensation > 6) {
+                        qs = 3
+                    } else if (compensation > 3) {
+                        qs = 2
+                    } else {
+                        qs = 1
+                    }
+                    response.style.color = "Green";
+                    response.innerHTML = `passed probe!(${compensation}, QS: ${qs})`
+                } else {
+                    response.style.color = "Red";
+                    response.innerHTML = `did not pass probe!(${compensation})`
+                }
+            });
+        } else {
+            response.style.color = "Red";
+            response.innerHTML = `Please enter all rolled numbers or click on a dice to generate a random number`
+        }
     }
 });
 
