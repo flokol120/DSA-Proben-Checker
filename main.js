@@ -1,12 +1,16 @@
 const { app, BrowserWindow } = require('electron');
+const fetch = require('node-fetch');
 const path = require('path');
 const fs = require('fs');
+const fse = require('fs-extra');
 const os = require('os');
 const url = require('url');
 
+const api = 'http://127.0.0.1:3000/';
+
 var win;
 
-function createWindow() {
+async function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({ width: 800, height: 580 })
 
@@ -15,17 +19,22 @@ function createWindow() {
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true
-    }))
-  
+    }));
+
+    /*const requestHeaders = new Headers();
+    requestHeaders.set("Content-Type", "application/json");*/
+
+
+
     // Open the DevTools.
     //win.webContents.openDevTools()
-  
+
     // Emitted when the window is closed.
     win.on('closed', () => {
-      // Dereference the window object, usually you would store windows
-      // in an array if your app supports multi windows, this is the time
-      // when you should delete the corresponding element.
-      win = null
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        win = null
     })
 }
 
@@ -52,6 +61,29 @@ exports.handleAddTalent = function handleAddTalent(name, number, firstAttr, seco
     });
 }
 
+exports.handleCreateRoom = async function handleCreateRoom(roomName, callback) {
+    const files = await fse.readdir('./DSA Helden');
+
+    const heros = [];
+
+    for (file of files) {
+        heros.push(JSON.parse(await fse.readFile(path.join('./DSA Helden', file))));
+    }
+
+
+    const body = JSON.stringify({
+        "name": roomName,
+        "heros": heros
+    });
+
+    const response = await fetch(api + 'createRoom', {
+        method: 'POST', body, headers: { "Content-Type": "application/json" }
+    }).then(r => r.json());
+    console.log(response);
+
+    callback(response.code === 0);
+}
+
 exports.handleForm = function handleForm(targetWindow, first, second, third, probe, hero, relief, restriction, callback) {
     fs.readFile(`./DSA Helden/${hero}`, 'utf8', function (err, data) {
         if (err) throw err;
@@ -62,8 +94,8 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
             var secondAttr;
             var thirdAttr;
             var talent;
-            for(var i = 0; i < objTal.length; i++){
-                if(objTal[i]['number'] == probe){
+            for (var i = 0; i < objTal.length; i++) {
+                if (objTal[i]['number'] == probe) {
                     var currObj = objTal[i]
                     firstAttr = currObj['firstAttr']
                     secondAttr = currObj['secondAttr']
@@ -77,21 +109,21 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
             var firstAttrValue = attributes[firstAttr][1] + attributes[firstAttr][2]
             var secondAttrValue = attributes[secondAttr][1] + attributes[secondAttr][2]
             var thirdAttrValue = attributes[thirdAttr][1] + attributes[thirdAttr][2]
-            
-            if(relief != 0 && restriction != 0){
+
+            if (relief != 0 && restriction != 0) {
                 var firstCalc = ((firstAttrValue - first) + restriction) - relief
                 var secondCalc = ((secondAttrValue - second) + restriction) - relief
                 var thirdCalc = ((thirdAttrValue - third) + restriction) - relief
-            }else{
-                if(relief == 0 && restriction == 0){
+            } else {
+                if (relief == 0 && restriction == 0) {
                     var firstCalc = firstAttrValue - first
                     var secondCalc = secondAttrValue - second
                     var thirdCalc = thirdAttrValue - third
-                }else if(relief != 0){
+                } else if (relief != 0) {
                     var firstCalc = ((firstAttrValue - first) + relief)
                     var secondCalc = ((secondAttrValue - second) + relief)
                     var thirdCalc = ((thirdAttrValue - third) + relief)
-                }else{
+                } else {
                     var firstCalc = ((firstAttrValue - first) - restriction)
                     var secondCalc = ((secondAttrValue - second) - restriction)
                     var thirdCalc = ((thirdAttrValue - third) - restriction)
@@ -99,9 +131,9 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
             }
 
             var compensation;
-            if(obj['talents'][talent] != undefined){
+            if (obj['talents'][talent] != undefined) {
                 compensation = obj['talents'][talent]
-            }else{
+            } else {
                 compensation = 0
             }
 
@@ -120,18 +152,74 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
     });
 };
 
+exports.handleRequestProbe = async (nickname, probe, relief, restriction, name, heroName, callback) => {
+    const hero = JSON.parse(await fse.readFile(`./DSA Helden/${heroName}`));
+    const talents = JSON.parse(await fse.readFile('./talents.json'));
+    let firstAttribute;
+    let secondAttribute;
+    let thirdAttribute;
+    let talent;
+    for (var i = 0; i < talents.length; i++) {
+        if (talents[i]['number'] == probe) {
+            const currObj = talents[i];
+            firstAttribute = currObj['firstAttr'];
+            secondAttribute = currObj['secondAttr'];
+            thirdAttribute = currObj['thirdAttr'];
+            talent = currObj['number'];
+            break;
+        }
+    }
+    var attributes = hero['attr']['values'];
+    var firstValue = attributes[firstAttribute][1] + attributes[firstAttribute][2]
+    var secondValue = attributes[secondAttribute][1] + attributes[secondAttribute][2]
+    var thirdValue = attributes[thirdAttribute][1] + attributes[thirdAttribute][2]
+    console.log([firstValue, secondValue, thirdValue, name, nickname]);
+
+    const response = await fetch(api + 'requestProbe', {
+        method: 'POST', body: JSON.stringify({
+            nickname,
+            name,
+            firstValue,
+            secondValue,
+            thirdValue,
+            relief,
+            restriction,
+        }), headers: { "Content-Type": "application/json" }
+    }).then(r => r.json());
+}
+
+exports.getUser = async (roomName, callback) => {
+    const response = await fetch(api + 'getUsersOfRoom', {
+        method: 'POST', body: JSON.stringify({
+            room: roomName
+        }), headers: { "Content-Type": "application/json" }
+    }).then(r => r.json());
+    callback(response.user);
+};
+
+exports.assignHero = async (roomName, nickname, heroName, callback) => {
+    const response = await fetch(api + 'assignHero', {
+        method: 'POST', body: JSON.stringify({
+            room: roomName,
+            nickname,
+            heroName
+        }), headers: { "Content-Type": "application/json" }
+    }).then(r => r.json());
+    callback(response.code === 0);
+};
+
 app.on('ready', function () {
     createWindow();
 });
-  
+
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 })
 
 app.on('activate', () => {
-  if (win === null) {
-    createWindow()
-  }
+    if (win === null) {
+        createWindow()
+    }
 })

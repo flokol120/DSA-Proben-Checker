@@ -24,6 +24,25 @@ module.exports.populateProbes = function populateProbes(document) {
     });
 }
 
+exports.populateUsers = function populateUsers(document, users) {
+    var select = document.getElementById("user");
+    clearOptions(select);
+    let counter = 0;
+    for (const user of users) {
+        const opt = document.createElement('option');
+        opt.value = counter;
+        opt.textContent = user.nickname;
+        select.appendChild(opt);
+    }
+}
+
+const clearOptions = (select) => {
+    console.log(select.options.length);
+    for (let i = 0; i < select.options.length; i++) {
+        select.options[i] = undefined;
+    }
+}
+
 function getHeroes(callback) {
     fs.readdir("./DSA Helden", function (err, filenames) {
         var data = []
@@ -38,21 +57,23 @@ function getHeroes(callback) {
 }
 
 module.exports.populateHeroes = function populateHeroes(document) {
-    var select = document.getElementById("hero")
-    getHeroes(function (data) {
-        if (data.length != 0) {
-            for (var i = 0; i < data.length; i++) {
-                var opt = document.createElement("option")
-                opt.value = data[i][1]
-                opt.textContent = data[i][0]
-                select.appendChild(opt)
+    var selects = document.getElementsByClassName("hero")
+    for (const select of selects) {
+        getHeroes(function (data) {
+            if (data.length != 0) {
+                for (var i = 0; i < data.length; i++) {
+                    var opt = document.createElement("option")
+                    opt.value = data[i][1]
+                    opt.textContent = data[i][0]
+                    select.appendChild(opt)
+                }
+                document.getElementById("submit").disabled = false;
+                response.innerHTML = ""
+            } else {
+                response.style.color = "Red"
+                response.innerHTML = "no heroes were found! Be sure to place them into 'DSA Helden/'"
+                document.getElementById("submit").disabled = true;
             }
-            document.getElementById("submit").disabled = false;
-            response.innerHTML = ""
-        }else{
-            response.style.color = "Red"
-            response.innerHTML = "no heroes were found! Be sure to place them into 'DSA Helden/'"
-            document.getElementById("submit").disabled = true;
-        }
-    });
+        });
+    }
 }

@@ -1,10 +1,20 @@
 const { remote, ipcRenderer } = require('electron');
-const { handleForm, handleAddTalent } = remote.require('./main');
+const { handleForm, handleAddTalent, handleCreateRoom, getUser, assignHero, handleRequestProbe } = remote.require('./main');
+
+const { populateUsers } = require('./misc');
+
 const fs = require('fs');
 const $ = require('jquery')
 const currentWindow = remote.getCurrentWindow();
 
 const submitFormButton = document.querySelector("#checkProbe");
+const createRoomButton = document.querySelector("#createRoom");
+
+const refreshButton = document.getElementById('refresh');
+
+const user = document.getElementById('user');
+
+let currentRoom = undefined;
 
 $('#randomFirst').click(function () {
     document.getElementById("first").value = generateRandomInteger(1, 20)
@@ -33,7 +43,7 @@ submitFormButton.addEventListener("submit", function (event) {
         response.innerHTML = `Only values between 1 and 20 are allowed!`
     } else {
         let type = document.getElementById("probe").value;
-        let hero = document.getElementById("hero").value;
+        let hero = document.getElementById("heroDice").value;
         let relief = parseInt(document.getElementById("relief").value);
         let restriction = parseInt(document.getElementById("restriction").value);
         if (first != "" && second != "" && third != "") {
@@ -98,3 +108,77 @@ addTalent.addEventListener("submit", function (event) {
 function generateRandomInteger(min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min))
 }
+
+createRoomButton.addEventListener("submit", (event) => {
+    event.preventDefault();
+    currentRoom = document.getElementById('gameMasterName').value;
+    handleCreateRoom(currentRoom, (success) => {
+        if (success) {
+            document.getElementById("response").innerHTML = `room '${currentRoom}' was created!`;
+        } else {
+            document.getElementById("response").innerHTML = `An error occurred!'`;
+        }
+    })
+});
+
+const refresh = () => {
+    if (currentRoom === undefined) {
+        currentRoom = document.getElementById('gameMasterName').value;
+        if (currentRoom === '') {
+            currentRoom === undefined;
+        }
+    }
+    if (currentRoom !== undefined) {
+        console.log(currentRoom);
+        getUser(currentRoom, (user) => {
+            populateUsers(document, user);
+        });
+    }
+};
+
+const assignHeroClick = () => {
+    let nickname = undefined;
+    for (const option of user.options) {
+        if (option.selected === true) {
+            nickname = option.innerHTML
+        }
+    }
+    const heros = document.getElementById('heroRoom');
+    let heroName = undefined;
+    for (const option of heros.options) {
+        if (option.selected === true) {
+            heroName = option.innerHTML
+        }
+    }
+    assignHero(currentRoom, nickname, heroName, () => {
+
+    });
+};
+
+const requestProbe = () => {
+    let nickname = undefined;
+    for (const option of user.options) {
+        if (option.selected === true) {
+            nickname = option.innerHTML
+        }
+    }
+    let typeSpinner = document.getElementById('probe');
+    let hero = document.getElementById("heroRoom").value;
+    let type = typeSpinner.value;
+    let name = undefined;
+    for (const option of typeSpinner.options) {
+        if (option.selected === true) {
+            name = option.innerHTML
+        }
+    }
+    let relief = parseInt(document.getElementById("relief").value);
+    let restriction = parseInt(document.getElementById("restriction").value);
+    handleRequestProbe(nickname, type, relief, restriction, name, hero, () => {
+
+    });
+    console.log('HI!');
+}
+
+refreshButton.addEventListener("onclick", (event) => {
+    event.preventDefault();
+});

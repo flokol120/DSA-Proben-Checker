@@ -15,21 +15,24 @@
       <h2 style="text-align: center;">Probe überprüfen</h2>
       <form action="#" id="checkProbe">
         <div>
-          <input id="first" type="number" class="topcoat-text-input--large" placeholder="first value rolled" style="width: 80%" />
+          <input id="first" type="number" class="topcoat-text-input--large" placeholder="first value rolled"
+            style="width: 80%" />
           <img src="./img/dice.svg" style="width: 7%; height: 7%;" id="randomFirst" />
           <br>
           <br>
-          <input id="second" type="number" class="topcoat-text-input--large" placeholder="second value rolled" style="width: 80%" />
+          <input id="second" type="number" class="topcoat-text-input--large" placeholder="second value rolled"
+            style="width: 80%" />
           <img src="./img/dice.svg" style="width: 7%; height: 7%;" id="randomSecond" />
           <br>
           <br>
-          <input id="third" type="number" class="topcoat-text-input--large" placeholder="third value rolled" style="width: 80%" />
+          <input id="third" type="number" class="topcoat-text-input--large" placeholder="third value rolled"
+            style="width: 80%" />
           <img src="./img/dice.svg" style="width: 7%; height: 7%;" id="randomThird" />
         </div>
         <br>
         <br>
 
-        <select id="hero" class="topcoat-select" class="topcoat-select" style="width: 40%;">
+        <select id="heroDice" class="hero topcoat-select" style="width: 40%;">
         </select>
 
         <select id="probe" class="topcoat-select" style="width: 40%;"></select>
@@ -75,8 +78,11 @@
         <br>
         <br>
         <input id="submit" type="submit" value="check Probe" class="topcoat-button--large" />
+        <input id="submit" type="button" value="request Probe" onclick="requestProbe();"
+          class="topcoat-button--large" />
       </form>
-      <b id="response" style="float: left; padding-left: 1pt; padding-right: 1pt; margin-top: 5pt; text-align: center"></b>
+      <b id="response"
+        style="float: left; padding-left: 1pt; padding-right: 1pt; margin-top: 5pt; text-align: center"></b>
 
     </div>
 
@@ -130,6 +136,28 @@
       <br>
       <br>
       <input id="reload" type="button" value="reload heroes and talents" class="topcoat-button--large" />
+    </div>
+
+
+    <div id="roomDiv" style="width:45%;float:right;padding-right: 5pt; padding-top: 5pt;">
+      <h2 style="text-align: center;">Room Details</h2>
+      <form action="#" id="createRoom">
+        <input id="gameMasterName" type="text" class="topcoat-text-input--large" placeholder="your game master name"
+          style="width: 80%" />
+        <br>
+        <br>
+        <input id="submitCreateRoom" type="submit" value="create" class="topcoat-button--large" />
+      </form>
+      <br>
+      <br>
+      <select id="user" class="topcoat-select" style="width: 40%;">
+        <option value=0 selected>No users in room!</option>
+      </select>
+      <select id="heroRoom" class="hero topcoat-select" style="width: 40%;">
+      </select>
+      <input id="refresh" type="button" value="refresh" class="topcoat-button--large" onclick="refresh();" />
+      <input id="assignHero" type="button" value="assign hero" class="topcoat-button--large"
+        onclick="assignHeroClick();" />
     </div>
   </div>
 
