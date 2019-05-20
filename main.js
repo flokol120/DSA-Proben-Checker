@@ -6,7 +6,15 @@ const fse = require('fs-extra');
 const os = require('os');
 const url = require('url');
 
+const io = require('socket.io-client');
+const crypto = require('crypto');
+
+let socket = null;
+
+let uid = '';
+
 const api = 'http://127.0.0.1:3000/';
+const socketUrl = 'http://127.0.0.1:3001/';
 
 var win;
 
@@ -20,6 +28,16 @@ async function createWindow() {
         protocol: 'file:',
         slashes: true
     }));
+
+    socket = io(socketUrl);
+
+    socket.on('newUser', (user) => {
+        win.webContents.send('newUser', user);
+    });
+
+    socket.on('rollingResult', (data) => {
+        win.webContents.send('rollingResult', data);
+    });
 
     /*const requestHeaders = new Headers();
     requestHeaders.set("Content-Type", "application/json");*/
@@ -70,18 +88,18 @@ exports.handleCreateRoom = async function handleCreateRoom(roomName, callback) {
         heros.push(JSON.parse(await fse.readFile(path.join('./DSA Helden', file))));
     }
 
+    if (uid === '' || uid === null || uid === undefined) {
+        uid = crypto.createHash('sha512').update(roomName + Date.now().toString()).digest('hex')
+    }
 
-    const body = JSON.stringify({
-        "name": roomName,
-        "heros": heros
-    });
+    const body = {
+        name: roomName,
+        id: uid,
+        heros
+    };
 
-    const response = await fetch(api + 'createRoom', {
-        method: 'POST', body, headers: { "Content-Type": "application/json" }
-    }).then(r => r.json());
-    console.log(response);
-
-    callback(response.code === 0);
+    await socket.emit('createRoom', body);
+    callback(true);
 }
 
 exports.handleForm = function handleForm(targetWindow, first, second, third, probe, hero, relief, restriction, callback) {
@@ -152,9 +170,9 @@ exports.handleForm = function handleForm(targetWindow, first, second, third, pro
     });
 };
 
-exports.handleRequestProbe = async (nickname, probe, relief, restriction, name, heroName, callback) => {
+exports.handleRequestProbe = async (nickname, probe, relief, restriction, name, heroName, id, callback) => {
     const hero = JSON.parse(await fse.readFile(`./DSA Helden/${heroName}`));
-    const talents = JSON.parse(await fse.readFile('./talents.json'));
+    const talents = JSON.parse(await fse.readFile('./talents.json'))['talents'];
     let firstAttribute;
     let secondAttribute;
     let thirdAttribute;
@@ -170,22 +188,31 @@ exports.handleRequestProbe = async (nickname, probe, relief, restriction, name, 
         }
     }
     var attributes = hero['attr']['values'];
-    var firstValue = attributes[firstAttribute][1] + attributes[firstAttribute][2]
-    var secondValue = attributes[secondAttribute][1] + attributes[secondAttribute][2]
-    var thirdValue = attributes[thirdAttribute][1] + attributes[thirdAttribute][2]
-    console.log([firstValue, secondValue, thirdValue, name, nickname]);
+    var firstValue = attributes[firstAttribute][1] + attributes[firstAttribute][2];
+    var secondValue = attributes[secondAttribute][1] + attributes[secondAttribute][2];
+    var thirdValue = attributes[thirdAttribute][1] + attributes[thirdAttribute][2];
 
-    const response = await fetch(api + 'requestProbe', {
-        method: 'POST', body: JSON.stringify({
-            nickname,
-            name,
-            firstValue,
-            secondValue,
-            thirdValue,
-            relief,
-            restriction,
-        }), headers: { "Content-Type": "application/json" }
-    }).then(r => r.json());
+    var compensation;
+    if (hero['talents'][talent] !== undefined) {
+        compensation = hero['talents'][talent];
+    } else {
+        compensation = 0
+    }
+
+    const body = {
+        nickname,
+        id,
+        name,
+        firstValue,
+        secondValue,
+        thirdValue,
+        compensation,
+        relief,
+        restriction,
+        gameMasterId: uid
+    };
+
+    await socket.emit('requestProbe', body);
 }
 
 exports.getUser = async (roomName, callback) => {
@@ -198,14 +225,13 @@ exports.getUser = async (roomName, callback) => {
 };
 
 exports.assignHero = async (roomName, nickname, heroName, callback) => {
-    const response = await fetch(api + 'assignHero', {
-        method: 'POST', body: JSON.stringify({
-            room: roomName,
-            nickname,
-            heroName
-        }), headers: { "Content-Type": "application/json" }
-    }).then(r => r.json());
-    callback(response.code === 0);
+    const body = {
+        room: roomName,
+        nickname,
+        heroName
+    };
+    await socket.emit('assignHero', body);
+    callback(true);
 };
 
 app.on('ready', function () {

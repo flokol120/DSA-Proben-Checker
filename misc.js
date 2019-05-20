@@ -27,20 +27,19 @@ module.exports.populateProbes = function populateProbes(document) {
 exports.populateUsers = function populateUsers(document, users) {
     var select = document.getElementById("user");
     clearOptions(select);
-    let counter = 0;
     for (const user of users) {
         const opt = document.createElement('option');
-        opt.value = counter;
+        opt.value = user.id;
         opt.textContent = user.nickname;
         select.appendChild(opt);
     }
 }
 
 const clearOptions = (select) => {
-    console.log(select.options.length);
-    for (let i = 0; i < select.options.length; i++) {
+    select.innerHTML = '';
+    /*for (let i = 0; i < select.options.length; i++) {
         select.options[i] = undefined;
-    }
+    }*/
 }
 
 function getHeroes(callback) {

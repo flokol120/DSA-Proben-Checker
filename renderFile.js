@@ -157,9 +157,11 @@ const assignHeroClick = () => {
 
 const requestProbe = () => {
     let nickname = undefined;
+    let id = undefined;
     for (const option of user.options) {
         if (option.selected === true) {
             nickname = option.innerHTML
+            id = option.value;
         }
     }
     let typeSpinner = document.getElementById('probe');
@@ -173,7 +175,7 @@ const requestProbe = () => {
     }
     let relief = parseInt(document.getElementById("relief").value);
     let restriction = parseInt(document.getElementById("restriction").value);
-    handleRequestProbe(nickname, type, relief, restriction, name, hero, () => {
+    handleRequestProbe(nickname, type, relief, restriction, name, hero, id, () => {
 
     });
     console.log('HI!');
@@ -181,4 +183,26 @@ const requestProbe = () => {
 
 refreshButton.addEventListener("onclick", (event) => {
     event.preventDefault();
+});
+
+ipcRenderer.on('newUser', (_event, user) => {
+    populateUsers(document, user);
+});
+
+ipcRenderer.on('rollingResult', (_event, data) => {
+    console.log(data);
+    const nickname = data.results.data.nickname;
+    const probeName = data.results.data.name;
+    const firstValue = data.results.data.firstValue;
+    const secondValue = data.results.data.secondValue;
+    const thirdValue = data.results.data.thirdValue;
+    const response = document.getElementById("response");
+
+    if (data.passed) {
+        response.style.color = "Green";
+        response.innerHTML = `${nickname} did pass the probe '${probeName}'. The difference was ${data.dif}. He got ${data.oneCount} ones! The values were: 1.: ${firstValue} / ${data.results.results[0]}, 2.: ${secondValue} / ${data.results.results[1]}, 3.: ${thirdValue} / ${data.results.results[2]}`;
+    } else {
+        response.style.color = "red";
+        response.innerHTML = `${nickname} did not pass the probe '${probeName}'. The difference was ${data.results.results[0]}, The values were: 1.: ${firstValue} / ${data.results.results[0]}, 2.: ${secondValue} / ${data.results.results[1]}, 3.: ${thirdValue} / ${data.results.results[2]}`;
+    }
 });
